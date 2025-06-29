@@ -93,6 +93,44 @@ Install sdk via npm:
 npm install mem0ai
 ```
 
+### System Flow of Mem0
+```mermaid
+graph TD
+    subgraph User Interaction
+        A[User/Agent] --> B{mem0 API};
+    end
+
+    subgraph mem0 Core
+        B --> C[Memory Class];
+        C --> D{LLM Factory};
+        C --> E{Embedder Factory};
+        C --> F{Vector Store Factory};
+        C --> G[Graph Store];
+    end
+
+    subgraph Backend Services
+        D --> H[LLM Providers];
+        E --> I[Embedding Providers];
+        F --> J[Vector Stores];
+    end
+
+    subgraph Data Stores
+        J --> K[(Vector Database)];
+        G --> L[(Graph Database)];
+        C --> M[(SQLite History)];
+    end
+
+    A -- "add, search, get, etc." --> B;
+    B -- "config" --> C;
+    C -- "process text" --> D;
+    D -- "selects" --> H;
+    C -- "embed text" --> E;
+    E -- "selects" --> I;
+    C -- "store/retrieve vectors" --> F;
+    F -- "selects" --> J;
+    C -- "store/retrieve relations" --> G;
+```
+
 ### Basic Usage
 
 Mem0 requires an LLM to function, with `gpt-4o-mini` from OpenAI as the default. However, it supports a variety of LLMs; for details, refer to our [Supported LLMs documentation](https://docs.mem0.ai/components/llms/overview).
